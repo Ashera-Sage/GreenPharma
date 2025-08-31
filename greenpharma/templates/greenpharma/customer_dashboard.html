@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Dashboard – Green Pharma</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="{% url 'home' %}">🌿 Green Pharma</a>
+
+    <form class="d-flex ms-3 me-auto" role="search">
+      <input class="form-control me-2" type="search" placeholder="Search products..." aria-label="Search">
+      <button class="btn btn-light" type="submit">Search</button>
+    </form>
+
+    <ul class="navbar-nav">
+      <li class="nav-item"><a class="nav-link text-white" href="#">Cart 🛒</a></li>
+      <li class="nav-item dropdown">
+        <a class="nav-link text-white dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">Profile</a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+          <li><a class="dropdown-item" href="#">My Orders</a></li>
+          <li><a class="dropdown-item" href="#">Settings</a></li>
+
+        </ul>
+      </li>
+      <li class="nav-item"><a class="nav-link text-white" href="{% url 'logout' %}">Logout</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Dashboard Content -->
+<div class="container mt-4">
+    <h2 class="text-success mb-3">Welcome, Customer!</h2>
+
+    <!-- Products Section -->
+    <div class="row">
+        <!-- Example Product Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="https://via.placeholder.com/250x200" class="card-img-top" alt="Ashwagandha Capsules">
+                <div class="card-body d-flex flex-column">
+                    <h6 class="card-title">Ashwagandha Capsules</h6>
+                    <p class="card-text">₹250</p>
+                    <a href="#" class="btn btn-success mt-auto w-100">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Example Product Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="https://via.placeholder.com/250x200" class="card-img-top" alt="Triphala Powder">
+                <div class="card-body d-flex flex-column">
+                    <h6 class="card-title">Triphala Powder</h6>
+                    <p class="card-text">₹150</p>
+                    <a href="#" class="btn btn-success mt-auto w-100">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Example Product Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="https://via.placeholder.com/250x200" class="card-img-top" alt="Neem Tablets">
+                <div class="card-body d-flex flex-column">
+                    <h6 class="card-title">Neem Tablets</h6>
+                    <p class="card-text">₹200</p>
+                    <a href="#" class="btn btn-success mt-auto w-100">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Example Product Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="https://via.placeholder.com/250x200" class="card-img-top" alt="Herbal Oil">
+                <div class="card-body d-flex flex-column">
+                    <h6 class="card-title">Herbal Oil</h6>
+                    <p class="card-text">₹300</p>
+                    <a href="#" class="btn btn-success mt-auto w-100">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

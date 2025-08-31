@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+
 from .forms import RegisterForm, LoginForm
 
 # Home Page
@@ -39,7 +40,7 @@ def login_view(request):
                     login(request, user)
                     if role == "seller":
                         return redirect('seller_dashboard')
-                    return redirect('home')
+                    return redirect('customer_dashboard')
             else:
                 messages.error(request, "Invalid username or password.")
     else:
@@ -52,6 +53,11 @@ def logout_view(request):
     messages.success(request, "You have been logged out.")
     return redirect('login')
 
-# Seller Dashboard (dummy page)
+# Seller Dashboard (dummy)
 def seller_dashboard(request):
     return render(request, 'greenpharma/seller_dashboard.html')
+
+# Customer Dashboard (dummy for now)
+def customer_dashboard(request):
+    return render(request, 'greenpharma/customer_dashboard.html')
+

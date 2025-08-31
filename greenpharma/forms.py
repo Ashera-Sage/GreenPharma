@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
+
 # Registration Form
 class RegisterForm(UserCreationForm):
     ROLE_CHOICES = (
@@ -24,3 +25,4 @@ class LoginForm(forms.Form):
         ('seller', 'Seller'),
     )
     role = forms.ChoiceField(choices=ROLE_CHOICES, widget=forms.Select, label="Role")  # Dropdown
+
