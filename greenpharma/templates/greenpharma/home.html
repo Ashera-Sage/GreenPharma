@@ -3,120 +3,78 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Green Pharma – Ayurvedic Store</title>
+    <title>Green Pharma – Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-light">
 
 <!-- ✅ Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-success p-3">
-    <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="/">🌿 Green Pharma</a>
-
-        <!-- Search Bar (center like Amazon/Flipkart) -->
-        <form class="d-flex mx-auto" style="width: 50%;" method="get" action="{% url 'product_list' %}">
-            <input class="form-control me-2" type="search" placeholder="Search for Ayurvedic medicines, categories..." name="q">
-            <button class="btn btn-warning" type="submit">Search</button>
-        </form>
-
-        <!-- Auth Buttons -->
-        <ul class="navbar-nav ms-auto">
-            {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'login' %}">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="{% url 'logout' %}">Logout</a>
-                </li>
-            {% else %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link text-white" href="#" id="loginDropdown" role="button" data-bs-toggle="dropdown">
-                        Login
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{% url 'login' 'admin' %}">Admin</a></li>
-                        <li><a class="dropdown-item" href="{% url 'login' 'customer' %}">Customer</a></li>
-                        <li><a class="dropdown-item" href="{% url 'login' 'vendor' %}">Seller</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link text-white" href="#" id="registerDropdown" role="button" data-bs-toggle="dropdown">
-                        Register
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{% url 'register' 'customer' %}">Customer</a></li>
-                        <li><a class="dropdown-item" href="{% url 'register' 'vendor' %}">Seller</a></li>
-                    </ul>
-                </li>
-            {% endif %}
-        </ul>
-    </div>
-</nav>
-
-<!-- ✅ Hero Carousel (like Flipkart banners) -->
-<div id="heroCarousel" class="carousel slide mt-3" data-bs-ride="carousel">
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="{% static 'images/banner1.jpg' %}" class="d-block w-100" alt="Banner 1" height="300">
-    </div>
-    <div class="carousel-item">
-      <img src="{% static 'images/banner2.webp' %}" class="d-block w-100" alt="Banner 2" height="300">
-    </div>
-    <div class="carousel-item">
-      <img src="{% static 'images/banner3.jpg' %}" class="d-block w-100" alt="Banner 3" height="300">
-    </div>
-  </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon"></span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-    <span class="carousel-control-next-icon"></span>
-  </button>
-</div>
-
-<!-- ✅ Categories + Products -->
-<div class="container-fluid mt-4">
-  <div class="row">
-    <!-- Sidebar Categories -->
-    <div class="col-md-2">
-      <h5 class="text-success">Categories</h5>
-      <ul class="list-group">
-        <li class="list-group-item"><a href="#">Digestive Health</a></li>
-        <li class="list-group-item"><a href="#">Skin Care</a></li>
-        <li class="list-group-item"><a href="#">Immunity Boosters</a></li>
-        <li class="list-group-item"><a href="#">Hair Care</a></li>
-        <li class="list-group-item"><a href="#">General Wellness</a></li>
+<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="{% url 'home' %}">🌿 Green Pharma</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="{% url 'login' %}">Login</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="{% url 'register' %}">Register</a></li>
       </ul>
     </div>
+  </div>
+</nav>
 
-    <!-- Product Grid -->
-    <div class="col-md-10">
-      <h4 class="mb-3 text-success">Featured Products</h4>
-      <div class="row">
-        {% for product in products %}
-        <div class="col-md-3 mb-4">
-          <div class="card h-100 shadow-sm">
-            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" height="150">
-            <div class="card-body">
-              <h6 class="card-title">{{ product.name }}</h6>
-              <p class="text-muted small">{{ product.category.name }}</p>
-              <p class="fw-bold text-success">₹{{ product.price }}</p>
-              <a href="{% url 'product_detail' product.id %}" class="btn btn-sm btn-outline-success">View</a>
-              <a href="#" class="btn btn-sm btn-warning">Add to Cart</a>
-            </div>
-          </div>
+<!-- ✅ Hero Section -->
+<div class="container text-center mt-5">
+    <h1 class="text-success">Welcome to Green Pharma 🌱</h1>
+    <p class="lead">Your trusted Ayurvedic medicine store.</p>
+    <a href="#" class="btn btn-success btn-lg mt-3">Shop Now</a>
+</div>
+
+<!-- ✅ Dummy Products Section -->
+<div class="container mt-5">
+  <h2 class="text-center text-success mb-4">Featured Products</h2>
+  <div class="row">
+    <!-- Product 1 -->
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Product">
+        <div class="card-body">
+          <h5 class="card-title">Ashwagandha Capsules</h5>
+          <p class="card-text">Boosts immunity and reduces stress.</p>
+          <a href="#" class="btn btn-success">Buy Now</a>
         </div>
-        {% empty %}
-        <p>No products available</p>
-        {% endfor %}
+      </div>
+    </div>
+    <!-- Product 2 -->
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Product">
+        <div class="card-body">
+          <h5 class="card-title">Triphala Powder</h5>
+          <p class="card-text">Supports digestion and detoxification.</p>
+          <a href="#" class="btn btn-success">Buy Now</a>
+        </div>
+      </div>
+    </div>
+    <!-- Product 3 -->
+    <div class="col-md-4">
+      <div class="card shadow-sm">
+        <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Product">
+        <div class="card-body">
+          <h5 class="card-title">Neem Tablets</h5>
+          <p class="card-text">Purifies blood and promotes healthy skin.</p>
+          <a href="#" class="btn btn-success">Buy Now</a>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ✅ Footer -->
-<footer class="bg-success text-white text-center py-3 mt-4">
-  <p class="mb-0">&copy; 2025 Green Pharma | Ayurvedic E-Commerce Platform</p>
+<footer class="bg-success text-white text-center py-3 mt-5">
+  <p class="mb-0">© 2025 Green Pharma. All Rights Reserved.</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
