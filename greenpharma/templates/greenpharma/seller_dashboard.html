@@ -7,10 +7,74 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-    <div class="container mt-5">
-        <h2 class="text-success">Welcome to Seller Dashboard</h2>
-        <p>This is a placeholder page for seller functionalities.</p>
-        <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#">🌿 Green Pharma – Seller</a>
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item"><a class="nav-link text-white" href="{% url 'logout' %}">Logout</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Dashboard -->
+<div class="container mt-4">
+    <h2 class="text-success">Welcome, {{ user.username }} 👋</h2>
+    <p class="text-muted">Manage your products here.</p>
+
+    <div class="row mt-4">
+        <!-- Add Product Form -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    Add New Product
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-success w-100">Add Product</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product List -->
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    Your Products
+                </div>
+                <div class="card-body">
+                    {% if products %}
+                        <div class="row">
+                            {% for product in products %}
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100 shadow-sm">
+                                        {% if product.image %}
+                                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                                        {% else %}
+                                            <img src="https://via.placeholder.com/250x200" class="card-img-top" alt="No Image">
+                                        {% endif %}
+                                        <div class="card-body d-flex flex-column">
+                                            <h6 class="card-title">{{ product.name }}</h6>
+                                            <p class="card-text">₹{{ product.price }}</p>
+                                            <p class="text-muted">Stock: {{ product.stock }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No products added yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

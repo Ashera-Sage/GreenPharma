@@ -13,20 +13,27 @@
   <div class="container">
     <a class="navbar-brand fw-bold" href="{% url 'home' %}">🌿 Green Pharma</a>
 
-    <form class="d-flex ms-3 me-auto" role="search">
-      <input class="form-control me-2" type="search" placeholder="Search products..." aria-label="Search">
-      <button class="btn btn-light" type="submit">Search</button>
-    </form>
+    <form class="d-flex ms-3 me-auto" method="get" action="{% url 'customer_dashboard' %}">
+  <input class="form-control me-2" type="search" name="q" placeholder="Search products..."
+         value="{{ request.GET.q }}">
+
+  <select name="category" class="form-select me-2" style="width: 200px;">
+    <option value="">All Categories</option>
+    {% for cat in categories %}
+      <option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:"s" %}selected{% endif %}>
+        {{ cat.name }}
+      </option>
+    {% endfor %}
+  </select>
+
+  <button class="btn btn-light" type="submit">Search</button>
+</form>
+
 
     <ul class="navbar-nav">
       <li class="nav-item"><a class="nav-link text-white" href="#">Cart 🛒</a></li>
-      <li class="nav-item dropdown">
-        <a class="nav-link text-white dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">Profile</a>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
-          <li><a class="dropdown-item" href="#">My Orders</a></li>
-          <li><a class="dropdown-item" href="#">Settings</a></li>
-
-        </ul>
+      <li class="nav-item">
+        <a class="nav-link text-white" href="{% url 'profile' %}">Profile</a>
       </li>
       <li class="nav-item"><a class="nav-link text-white" href="{% url 'logout' %}">Logout</a></li>
     </ul>
@@ -34,61 +41,73 @@
 </nav>
 
 <!-- Dashboard Content -->
-<div class="container mt-4">
-    <h2 class="text-success mb-3">Welcome, Customer!</h2>
+<div class="container mt-4" id="dashboardSection">
+    <h1><p>Welcome, {{ user.first_name }} {{ user.last_name }}</p></h1>
 
     <!-- Products Section -->
-    <div class="row">
-        <!-- Example Product Card -->
+<!-- Products Section -->
+<div class="row">
+    {% for product in products %}
         <div class="col-md-3 mb-4">
             <div class="card h-100 shadow-sm">
-                <img src="https://via.placeholder.com/250x200" class="card-img-top" alt="Ashwagandha Capsules">
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
                 <div class="card-body d-flex flex-column">
-                    <h6 class="card-title">Ashwagandha Capsules</h6>
-                    <p class="card-text">₹250</p>
+                    <h6 class="card-title">{{ product.name }}</h6>
+                    <p class="card-text">₹{{ product.price }}</p>
                     <a href="#" class="btn btn-success mt-auto w-100">Add to Cart</a>
                 </div>
             </div>
+        </div>
+    {% empty %}
+        <p class="text-center">No products found.</p>
+    {% endfor %}
+</div>
+
+<!-- Profile Section (Initially Hidden) -->
+<div class="container mt-4 d-none" id="profileSection">
+    <h2 class="text-success mb-3">My Profile</h2>
+    <form>
+        <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" value="John Doe">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" value="johndoe@example.com">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Phone</label>
+            <input type="text" class="form-control" value="9876543210">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Address</label>
+            <textarea class="form-control">123, Green Street, Ayurveda City</textarea>
         </div>
 
-        <!-- Example Product Card -->
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="https://via.placeholder.com/250x200" class="card-img-top" alt="Triphala Powder">
-                <div class="card-body d-flex flex-column">
-                    <h6 class="card-title">Triphala Powder</h6>
-                    <p class="card-text">₹150</p>
-                    <a href="#" class="btn btn-success mt-auto w-100">Add to Cart</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Example Product Card -->
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="https://via.placeholder.com/250x200" class="card-img-top" alt="Neem Tablets">
-                <div class="card-body d-flex flex-column">
-                    <h6 class="card-title">Neem Tablets</h6>
-                    <p class="card-text">₹200</p>
-                    <a href="#" class="btn btn-success mt-auto w-100">Add to Cart</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Example Product Card -->
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="https://via.placeholder.com/250x200" class="card-img-top" alt="Herbal Oil">
-                <div class="card-body d-flex flex-column">
-                    <h6 class="card-title">Herbal Oil</h6>
-                    <p class="card-text">₹300</p>
-                    <a href="#" class="btn btn-success mt-auto w-100">Add to Cart</a>
-                </div>
-            </div>
-        </div>
-    </div>
+        <!-- Buttons -->
+        <button type="submit" class="btn btn-success">Save</button>
+        <button type="button" class="btn btn-warning">Edit</button>
+        <button type="button" class="btn btn-secondary" id="backBtn">Back</button>
+    </form>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const profileBtn = document.getElementById("profileBtn");
+    const backBtn = document.getElementById("backBtn");
+    const profileSection = document.getElementById("profileSection");
+    const dashboardSection = document.getElementById("dashboardSection");
+
+    profileBtn.addEventListener("click", function(e) {
+        e.preventDefault();
+        dashboardSection.classList.add("d-none");
+        profileSection.classList.remove("d-none");
+    });
+
+    backBtn.addEventListener("click", function() {
+        profileSection.classList.add("d-none");
+        dashboardSection.classList.remove("d-none");
+    });
+</script>
 </body>
 </html>
