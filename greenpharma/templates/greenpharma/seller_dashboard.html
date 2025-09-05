@@ -13,6 +13,7 @@
   <div class="container">
     <a class="navbar-brand fw-bold" href="#">🌿 Green Pharma – Seller</a>
     <ul class="navbar-nav ms-auto">
+      <li class="nav-item"><a class="nav-link text-white" href="{% url 'add_product' %}">➕ Add Product</a></li>
       <li class="nav-item"><a class="nav-link text-white" href="{% url 'logout' %}">Logout</a></li>
     </ul>
   </div>
@@ -24,24 +25,7 @@
     <p class="text-muted">Manage your products here.</p>
 
     <div class="row mt-4">
-        <!-- Add Product Form -->
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-success text-white">
-                    Add New Product
-                </div>
-                <div class="card-body">
-                    <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="btn btn-success w-100">Add Product</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Product List -->
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card shadow-sm">
                 <div class="card-header bg-dark text-white">
                     Your Products

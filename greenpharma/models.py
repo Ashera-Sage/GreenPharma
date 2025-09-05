@@ -16,7 +16,7 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.role}"
 
-    
+
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
@@ -34,8 +34,15 @@ class Product(models.Model):
         Category,
         on_delete=models.CASCADE,
         related_name="products",
-        null=True,  # 👈 allow null temporarily
-        blank=True  # 👈 so existing rows don’t break
+        null=True,
+        blank=True
+    )
+    seller = models.ForeignKey(  
+        User,
+        on_delete=models.CASCADE,
+        related_name="products",
+        null=True,
+        blank=True
     )
 
     def __str__(self):
