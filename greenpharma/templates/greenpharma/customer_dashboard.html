@@ -1,4 +1,4 @@
-{% load static %}
+{% load static %} 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,27 +13,27 @@
   <div class="container">
     <a class="navbar-brand fw-bold" href="{% url 'home' %}">🌿 Green Pharma</a>
 
+    <!-- Search -->
     <form class="d-flex ms-3 me-auto" method="get" action="{% url 'customer_dashboard' %}">
-  <input class="form-control me-2" type="search" name="q" placeholder="Search products..."
-         value="{{ request.GET.q }}">
+      <input class="form-control me-2" type="search" name="q" placeholder="Search products..."
+             value="{{ request.GET.q }}">
+      <select name="category" class="form-select me-2" style="width: 200px;">
+        <option value="">All Categories</option>
+        {% for cat in categories %}
+          <option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:"s" %}selected{% endif %}>
+            {{ cat.name }}
+          </option>
+        {% endfor %}
+      </select>
+      <button class="btn btn-light" type="submit">Search</button>
+    </form>
 
-  <select name="category" class="form-select me-2" style="width: 200px;">
-    <option value="">All Categories</option>
-    {% for cat in categories %}
-      <option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:"s" %}selected{% endif %}>
-        {{ cat.name }}
-      </option>
-    {% endfor %}
-  </select>
-
-  <button class="btn btn-light" type="submit">Search</button>
-</form>
-
-
+    <!-- Nav Links -->
     <ul class="navbar-nav">
       <li class="nav-item"><a class="nav-link text-white" href="#">Cart 🛒</a></li>
       <li class="nav-item">
-        <a class="nav-link text-white" href="{% url 'profile' %}">Profile</a>
+        <!-- ✅ Profile goes to profile page -->
+        <a class="nav-link text-white" href="{% url 'profile' %}">Profile 👤</a>
       </li>
       <li class="nav-item"><a class="nav-link text-white" href="{% url 'logout' %}">Logout</a></li>
     </ul>
@@ -41,73 +41,59 @@
 </nav>
 
 <!-- Dashboard Content -->
-<div class="container mt-4" id="dashboardSection">
-    <h1><p>Welcome, {{ user.first_name }} {{ user.last_name }}</p></h1>
+<div class="container mt-4">
+    <h1 class="mb-4">Welcome, {{ user.first_name }} {{ user.last_name }}</h1>
 
     <!-- Products Section -->
-<!-- Products Section -->
-<div class="row">
-    {% for product in products %}
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-                <div class="card-body d-flex flex-column">
-                    <h6 class="card-title">{{ product.name }}</h6>
-                    <p class="card-text">₹{{ product.price }}</p>
-                    <a href="#" class="btn btn-success mt-auto w-100">Add to Cart</a>
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="{% static 'images/default_product.jpg' %}" class="card-img-top" alt="No Image">
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title">{{ product.name }}</h6>
+                        <p class="card-text">₹{{ product.price }}</p>
+                        <a href="#" class="btn btn-success mt-auto w-100">Add to Cart</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    {% empty %}
-        <p class="text-center">No products found.</p>
-    {% endfor %}
-</div>
+        {% empty %}
+            <p class="text-center">No products found.</p>
+        {% endfor %}
+    </div>
 
-<!-- Profile Section (Initially Hidden) -->
-<div class="container mt-4 d-none" id="profileSection">
-    <h2 class="text-success mb-3">My Profile</h2>
-    <form>
-        <div class="mb-3">
-            <label class="form-label">Full Name</label>
-            <input type="text" class="form-control" value="John Doe">
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-control" value="johndoe@example.com">
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Phone</label>
-            <input type="text" class="form-control" value="9876543210">
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Address</label>
-            <textarea class="form-control">123, Green Street, Ayurveda City</textarea>
-        </div>
+    <!-- Pagination -->
+    {% if products.paginator.num_pages > 1 %}
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination">
+                {% if products.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ products.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}">Previous</a>
+                    </li>
+                {% endif %}
 
-        <!-- Buttons -->
-        <button type="submit" class="btn btn-success">Save</button>
-        <button type="button" class="btn btn-warning">Edit</button>
-        <button type="button" class="btn btn-secondary" id="backBtn">Back</button>
-    </form>
+                <li class="page-item active">
+                    <span class="page-link">
+                        Page {{ products.number }} of {{ products.paginator.num_pages }}
+                    </span>
+                </li>
+
+                {% if products.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ products.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    const profileBtn = document.getElementById("profileBtn");
-    const backBtn = document.getElementById("backBtn");
-    const profileSection = document.getElementById("profileSection");
-    const dashboardSection = document.getElementById("dashboardSection");
-
-    profileBtn.addEventListener("click", function(e) {
-        e.preventDefault();
-        dashboardSection.classList.add("d-none");
-        profileSection.classList.remove("d-none");
-    });
-
-    backBtn.addEventListener("click", function() {
-        profileSection.classList.add("d-none");
-        dashboardSection.classList.remove("d-none");
-    });
-</script>
 </body>
 </html>

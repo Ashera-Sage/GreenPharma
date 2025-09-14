@@ -8,73 +8,120 @@
 </head>
 <body class="bg-light">
 
-<!-- ✅ Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow">
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
   <div class="container">
-    <a class="navbar-brand fw-bold" href="{% url 'home' %}">🌿 Green Pharma</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <a class="navbar-brand fw-bold" href="#">🌿 Green Pharma</a>
+    <div class="collapse navbar-collapse">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Home</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="{% url 'login' %}">Login</a></li>
-        <li class="nav-item"><a class="nav-link text-white" href="{% url 'register' %}">Register</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
       </ul>
     </div>
   </div>
 </nav>
 
-<!-- ✅ Hero Section -->
-<div class="container text-center mt-5">
-    <h1 class="text-success">Welcome to Green Pharma 🌱</h1>
-    <p class="lead">Your trusted Ayurvedic medicine store.</p>
-    <a href="#" class="btn btn-success btn-lg mt-3">Shop Now</a>
-</div>
-
-<!-- ✅ Dummy Products Section -->
-<div class="container mt-5">
-  <h2 class="text-center text-success mb-4">Featured Products</h2>
-  <div class="row">
-    <!-- Product 1 -->
-    <div class="col-md-4">
-      <div class="card shadow-sm">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Product">
-        <div class="card-body">
-          <h5 class="card-title">Ashwagandha Capsules</h5>
-          <p class="card-text">Boosts immunity and reduces stress.</p>
-          <a href="#" class="btn btn-success">Buy Now</a>
-        </div>
+<!-- Hero Carousel -->
+<div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <!-- Slide 1 -->
+    <div class="carousel-item active">
+      <img src="{% static 'images/banner1.jpg' %}" class="d-block w-100" style="height:60vh; object-fit:cover;">
+      <div class="carousel-caption d-none d-md-block">
+        <h1 class="fw-bold">Welcome to Green Pharma 🌱</h1>
+        <p>Your trusted Ayurvedic medicine store</p>
       </div>
     </div>
-    <!-- Product 2 -->
-    <div class="col-md-4">
-      <div class="card shadow-sm">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Product">
-        <div class="card-body">
-          <h5 class="card-title">Triphala Powder</h5>
-          <p class="card-text">Supports digestion and detoxification.</p>
-          <a href="#" class="btn btn-success">Buy Now</a>
-        </div>
+    <!-- Slide 2 -->
+    <div class="carousel-item">
+      <img src="{% static 'images/banner2.webp' %}" class="d-block w-100" style="height:60vh; object-fit:cover;">
+      <div class="carousel-caption d-none d-md-block">
+        <h1 class="fw-bold">Natural Remedies 🌿</h1>
+        <p>Pure Ayurvedic solutions for better health</p>
       </div>
     </div>
-    <!-- Product 3 -->
-    <div class="col-md-4">
-      <div class="card shadow-sm">
-        <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Product">
-        <div class="card-body">
-          <h5 class="card-title">Neem Tablets</h5>
-          <p class="card-text">Purifies blood and promotes healthy skin.</p>
-          <a href="#" class="btn btn-success">Buy Now</a>
-        </div>
+    <!-- Slide 3 -->
+    <div class="carousel-item">
+      <img src="{% static 'images/banner3.jpg' %}" class="d-block w-100" style="height:60vh; object-fit:cover;">
+      <div class="carousel-caption d-none d-md-block">
+        <h1 class="fw-bold">Herbal Wellness 🍃</h1>
+        <p>Balance your body, mind, and spirit</p>
       </div>
     </div>
   </div>
+
+  <!-- Controls -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
 </div>
 
-<!-- ✅ Footer -->
-<footer class="bg-success text-white text-center py-3 mt-5">
-  <p class="mb-0">© 2025 Green Pharma. All Rights Reserved.</p>
+<!-- Categories (Optional: Add images if you want) -->
+<div class="container my-5">
+    <h3 class="text-center text-success mb-4">Shop by Category</h3>
+    <div class="row text-center">
+        <div class="col-md-4 mb-3">
+            <div class="card category-card shadow-sm">
+                <img src="{% static 'greenpharma/images/category1.jpg' %}" class="card-img-top" alt="Immunity Boosters">
+                <div class="card-body">
+                    <h5 class="card-title">🌿 Immunity Boosters</h5>
+                    <p class="text-muted">Strengthen your natural defense system.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card category-card shadow-sm">
+                <img src="{% static 'greenpharma/images/category2.jpg' %}" class="card-img-top" alt="Skin & Beauty">
+                <div class="card-body">
+                    <h5 class="card-title">✨ Skin & Beauty</h5>
+                    <p class="text-muted">Herbal care for glowing skin.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card category-card shadow-sm">
+                <img src="{% static 'greenpharma/images/category3.jpg' %}" class="card-img-top" alt="Digestive Health">
+                <div class="card-body">
+                    <h5 class="card-title">🍃 Digestive Health</h5>
+                    <p class="text-muted">Ayurvedic support for healthy digestion.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Best Selling Products -->
+<div class="container my-5">
+    <h2 class="text-center text-success fw-bold">Best Selling Products 🌟</h2>
+    <div class="row mt-4">
+        {% for product in best_sellers %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height:200px; object-fit:cover;">
+                    {% else %}
+                        <img src="{% static 'greenpharma/images/default_product.jpg' %}" class="card-img-top" alt="No Image">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">₹{{ product.price }}</p>
+                        <p class="text-muted">Sold: {{ product.total_sold|default:0 }}</p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center text-muted">No best sellers yet.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-white text-center py-3">
+    <p>© 2025 Green Pharma. All Rights Reserved.</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

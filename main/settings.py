@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'greenpharma',
 ]
 
+AUTH_USER_MODEL = "greenpharma.Registration"
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

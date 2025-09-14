@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Seller Profile – Green Pharma</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<!-- ✅ Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="{% url 'seller_dashboard' %}">🌿 Green Pharma – Seller</a>
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item"><a class="nav-link text-white" href="{% url 'seller_dashboard' %}">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ✅ Profile Form -->
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-dark text-white">
+                    <h4>My Profile</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Display messages -->
+                    {% if messages %}
+                    <div class="mb-3">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <form method="POST" enctype="multipart/form-data" action="{% url 'seller_profile' %}">
+                        {% csrf_token %}  <!-- This line is CRITICAL -->
+                        
+                        <!-- Display form errors -->
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <strong>Please correct the following errors:</strong>
+                            <ul>
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ field|title }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                        <!-- Personal Info Fields -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <input type="text" name="first_name" value="{{ form.first_name.value|default:user.first_name }}" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" name="last_name" value="{{ form.last_name.value|default:user.last_name }}" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" value="{{ user.email }}" class="form-control" disabled>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="text" name="phone" value="{{ form.phone.value|default:profile.phone }}" class="form-control">
+                            {% if form.phone.errors %}
+                                <div class="text-danger">{{ form.phone.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <textarea name="address" class="form-control" rows="3">{{ form.address.value|default:profile.address }}</textarea>
+                            {% if form.address.errors %}
+                                <div class="text-danger">{{ form.address.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Upload License</label>
+                            <input type="file" name="license_file" class="form-control">
+                            {% if form.license_file.errors %}
+                                <div class="text-danger">{{ form.license_file.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Show current license file if uploaded -->
+                        {% if profile.license_file %}
+                            <div class="mb-3">
+                                <label class="form-label">Current License:</label>
+                                <p>
+                                    <a href="{{ profile.license_file.url }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                        📄 View Current License File
+                                    </a>
+                                </p>
+                            </div>
+                        {% endif %}
+
+                        <!-- Show approval status -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Approval Status:</label>
+                            {% if profile.status == "Approved" %}
+                                <span class="badge bg-success">✅ Approved</span>
+                            {% elif profile.status == "Pending" %}
+                                <span class="badge bg-warning text-dark">⏳ Pending</span>
+                            {% elif profile.status == "Rejected" %}
+                                <span class="badge bg-danger">❌ Rejected</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Unknown</span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Save button -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'seller_dashboard' %}" class="btn btn-secondary me-md-2">Back to Dashboard</a>
+                            <button type="submit" class="btn btn-success">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
