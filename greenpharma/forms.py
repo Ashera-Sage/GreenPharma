@@ -1,9 +1,11 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.utils import timezone
 from .models import Registration, CustomerProfile, SellerProfile, Product
 
-
-# 🔹 Registration Form
+# -------------------------------
+# Registration Form
+# -------------------------------
 class RegisterForm(UserCreationForm):
     class Meta:
         model = Registration
@@ -11,20 +13,23 @@ class RegisterForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # ✅ Show only Customer & Seller
         self.fields['role'].choices = [
             ("Customer", "Customer"),
             ("Seller", "Seller"),
         ]
 
 
-# 🔹 Login Form
+# -------------------------------
+# Login Form
+# -------------------------------
 class LoginForm(forms.Form):
     username = forms.CharField(label="Username")
     password = forms.CharField(widget=forms.PasswordInput, label="Password")
 
 
-# 🔹 Customer Profile Form
+# -------------------------------
+# Customer Profile Form
+# -------------------------------
 class CustomerProfileForm(forms.ModelForm):
     email = forms.EmailField(disabled=True, required=False, widget=forms.EmailInput(attrs={'class': 'form-control'}))
     first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -52,7 +57,6 @@ class CustomerProfileForm(forms.ModelForm):
         user.last_name = self.cleaned_data['last_name']
         if not self.fields['email'].disabled:
             user.email = self.cleaned_data['email']
-
         if commit:
             user.save()
             profile.user = user
@@ -60,7 +64,9 @@ class CustomerProfileForm(forms.ModelForm):
         return profile
 
 
-# 🔹 Seller Profile Form (FIXED)
+# -------------------------------
+# Seller Profile Form
+# -------------------------------
 class SellerProfileForm(forms.ModelForm):
     email = forms.EmailField(disabled=True, required=False, widget=forms.EmailInput(attrs={'class': 'form-control'}))
     first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -87,29 +93,35 @@ class SellerProfileForm(forms.ModelForm):
         profile = super().save(commit=False)
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
-        
-        # Handle file upload properly
         if 'license_file' in self.files:
             profile.license_file = self.files['license_file']
-            
         if commit:
             user.save()
             profile.user = user
             profile.save()
-            self.save_m2m()  # Important for many-to-many relationships if any
         return profile
 
 
-# 🔹 Product Form (for Sellers)
+# -------------------------------
+# Product Form
+# -------------------------------
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'price', 'stock', 'image', 'category']
+        fields = ['name', 'description', 'price', 'stock', 'image', 'expiry_date', 'offer', 'category']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
             'stock': forms.NumberInput(attrs={'class': 'form-control'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'expiry_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'offer': forms.NumberInput(attrs={'class': 'form-control'}),
             'category': forms.Select(attrs={'class': 'form-select'}),
         }
+
+    def clean_expiry_date(self):
+        expiry_date = self.cleaned_data.get('expiry_date')
+        if expiry_date and expiry_date < timezone.now().date():
+            raise forms.ValidationError("Expiry date cannot be in the past.")
+        return expiry_date
