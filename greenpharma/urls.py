@@ -20,5 +20,10 @@ urlpatterns = [
     # Customer
     path("customer-dashboard/", views.customer_dashboard, name="customer_dashboard"),
     path("customer_profile/", views.customer_profile, name="customer_profile"),
+    path("customer/product/<int:product_id>/", views.product_detail, name="product_detail"),
+    path("cart/", views.view_cart, name="view_cart"),
+    path("cart/add/<int:product_id>/", views.add_to_cart, name="add_to_cart"),
+    path("cart/remove/<int:cart_id>/", views.remove_from_cart, name="remove_from_cart"),
+    path("cart/checkout/", views.checkout, name="checkout"),
 ]
 

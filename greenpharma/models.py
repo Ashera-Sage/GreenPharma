@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils import timezone
+from decimal import Decimal
+
 
 # -------------------------------
 # Custom Manager for Registration
@@ -105,9 +107,11 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    # ✅ Correctly indented inside class
     def discounted_price(self):
+        """Return price after applying offer"""
         if self.offer > 0:
-            return self.price * (100 - self.offer) / 100
+            return self.price * (Decimal(100) - self.offer) / Decimal(100)
         return self.price
 
     @property
@@ -121,5 +125,53 @@ class Product(models.Model):
         if self.expiry_date:
             today = timezone.now().date()
             delta = self.expiry_date - today
-            return 0 <= delta.days <= 7  # Expiring in next 7 days
+            return 0 <= delta.days <= 7
         return False
+
+
+# -------------------------------
+# Cart
+# -------------------------------
+class Cart(models.Model):
+    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, related_name="cart")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("customer", "product")
+
+    def __str__(self):
+        return f"{self.product.name} x {self.quantity} for {self.customer.user.username}"
+
+    def total_price(self):
+        return self.product.discounted_price() * self.quantity
+
+
+# -------------------------------
+# Order
+# -------------------------------
+class Order(models.Model):
+    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE, related_name="orders")
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(
+        max_length=20,
+        choices=[("Pending", "Pending"), ("Shipped", "Shipped"), ("Delivered", "Delivered")],
+        default="Pending",
+    )
+
+    def __str__(self):
+        return f"Order #{self.id} - {self.customer.user.username}"
+
+    def total_amount(self):
+        return sum(item.total_price() for item in self.items.all())
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    quantity = models.PositiveIntegerField(default=1)
+    price_at_purchase = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def total_price(self):
+        return self.price_at_purchase * self.quantity

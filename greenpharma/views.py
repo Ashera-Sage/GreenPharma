@@ -4,9 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.utils import timezone
-
 from .forms import RegisterForm, LoginForm, ProductForm, CustomerProfileForm, SellerProfileForm
-from .models import Registration, CustomerProfile, SellerProfile, Product, Category
+from .models import Registration, CustomerProfile, SellerProfile, Product, Category, Cart, Order, OrderItem
 
 # -------------------------------
 # Home
@@ -173,6 +172,93 @@ def customer_dashboard(request):
         'selected_category': category_id or '',
     })
 
+@login_required
+def product_detail(request, product_id):
+    # Get the product or 404
+    product = get_object_or_404(Product, id=product_id)
+
+    return render(request, "greenpharma/product_detail.html", {
+        "product": product
+    })
+
+# -------------------------------
+# Add to Cart
+# -------------------------------
+@login_required
+def add_to_cart(request, product_id):
+    if request.user.role != "Customer":
+        messages.error(request, "Only customers can add to cart.")
+        return redirect("home")
+
+    customer = get_object_or_404(CustomerProfile, user=request.user)
+    product = get_object_or_404(Product, id=product_id)
+
+    cart_item, created = Cart.objects.get_or_create(customer=customer, product=product)
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
+
+    messages.success(request, f"✅ {product.name} added to cart.")
+    return redirect("view_cart")
+
+
+# -------------------------------
+# View Cart
+# -------------------------------
+@login_required
+def view_cart(request):
+    if request.user.role != "Customer":
+        messages.error(request, "Only customers can view cart.")
+        return redirect("home")
+
+    customer = get_object_or_404(CustomerProfile, user=request.user)
+    cart_items = Cart.objects.filter(customer=customer)
+
+    total = sum(item.total_price() for item in cart_items)
+
+    return render(request, "greenpharma/cart.html", {
+        "cart_items": cart_items,
+        "total": total,
+    })
+
+
+# -------------------------------
+# Remove from Cart
+# -------------------------------
+@login_required
+def remove_from_cart(request, cart_id):
+    cart_item = get_object_or_404(Cart, id=cart_id, customer__user=request.user)
+    cart_item.delete()
+    messages.success(request, "❌ Item removed from cart.")
+    return redirect("view_cart")
+
+
+# -------------------------------
+# Checkout
+# -------------------------------
+@login_required
+def checkout(request):
+    customer = get_object_or_404(CustomerProfile, user=request.user)
+    cart_items = Cart.objects.filter(customer=customer)
+
+    if not cart_items:
+        messages.error(request, "Your cart is empty.")
+        return redirect("view_cart")
+
+    order = Order.objects.create(customer=customer)
+
+    for item in cart_items:
+        OrderItem.objects.create(
+            order=order,
+            product=item.product,
+            quantity=item.quantity,
+            price_at_purchase=item.product.discounted_price(),
+        )
+
+    cart_items.delete()  # Clear cart after checkout
+
+    messages.success(request, f"🎉 Order #{order.id} placed successfully!")
+    return redirect("customer_dashboard")
 
 # -------------------------------
 # Customer Profile

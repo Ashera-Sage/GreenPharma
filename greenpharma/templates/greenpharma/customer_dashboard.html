@@ -30,6 +30,11 @@
         .category-dropdown option {
             padding: 5px 10px;
         }
+
+        .card-img-top {
+            height: 180px;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -39,7 +44,7 @@
   <div class="container">
     <a class="navbar-brand fw-bold" href="{% url 'home' %}">🌿 Green Pharma</a>
     <ul class="navbar-nav ms-auto">
-      <li class="nav-item"><a class="nav-link text-white" href="#">Cart 🛒</a></li>
+      <a class="nav-link text-white" href="{% url 'view_cart' %}">Cart 🛒</a>
       <li class="nav-item"><a class="nav-link text-white" href="{% url 'customer_profile' %}">Profile 👤</a></li>
       <li class="nav-item"><a class="nav-link text-white" href="{% url 'logout' %}">Logout</a></li>
     </ul>
@@ -74,13 +79,19 @@
         {% for product in products %}
             <div class="col-md-3 mb-4">
                 <div class="card h-100 shadow-sm">
-                    {% if product.image %}
-                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-                    {% else %}
-                        <img src="{% static 'images/default_product.jpg' %}" class="card-img-top" alt="No Image">
-                    {% endif %}
+                    <a href="{% url 'product_detail' product.id %}">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="{% static 'images/default_product.jpg' %}" class="card-img-top" alt="No Image">
+                        {% endif %}
+                    </a>
                     <div class="card-body d-flex flex-column">
-                        <h6 class="card-title">{{ product.name }}</h6>
+                        <h6 class="card-title">
+                            <a href="{% url 'product_detail' product.id %}" class="text-decoration-none text-dark">
+                                {{ product.name }}
+                            </a>
+                        </h6>
                         {% if product.offer > 0 %}
                             <p class="card-text text-danger">
                                 <del>₹{{ product.price }}</del> ₹{{ product.discounted_price|floatformat:2 }}
@@ -89,7 +100,7 @@
                         {% else %}
                             <p class="card-text">₹{{ product.price }}</p>
                         {% endif %}
-                        <a href="#" class="btn btn-success mt-auto w-100">Add to Cart</a>
+                        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-success mt-auto w-100">Add to Cart</a>
                     </div>
                 </div>
             </div>
