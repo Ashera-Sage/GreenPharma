@@ -1,3 +1,4 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html>
@@ -26,7 +27,7 @@
         <thead class="table-success">
             <tr>
                 <th>Product</th>
-                <th>Qty</th>
+                <th style="width:150px;">Quantity</th>
                 <th>Price</th>
                 <th>Total</th>
                 <th>Remove</th>
@@ -36,7 +37,15 @@
             {% for item in cart_items %}
             <tr>
                 <td>{{ item.product.name }}</td>
-                <td>{{ item.quantity }}</td>
+                <td>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <a href="{% url 'update_cart_quantity' item.id 'decrease' %}" 
+                           class="btn btn-outline-secondary btn-sm">−</a>
+                        <span class="mx-2">{{ item.quantity }}</span>
+                        <a href="{% url 'update_cart_quantity' item.id 'increase' %}" 
+                           class="btn btn-outline-secondary btn-sm">+</a>
+                    </div>
+                </td>
                 <td>₹{{ item.product.discounted_price|floatformat:2 }}</td>
                 <td>₹{{ item.total_price|floatformat:2 }}</td>
                 <td>

@@ -1,11 +1,14 @@
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.utils import timezone
 from .forms import RegisterForm, LoginForm, ProductForm, CustomerProfileForm, SellerProfileForm
-from .models import Registration, CustomerProfile, SellerProfile, Product, Category, Cart, Order, OrderItem
+from .models import (
+    Registration, CustomerProfile, SellerProfile,
+    Product, Category, Cart, Order, OrderItem
+)
 
 # -------------------------------
 # Home
@@ -172,14 +175,12 @@ def customer_dashboard(request):
         'selected_category': category_id or '',
     })
 
+
 @login_required
 def product_detail(request, product_id):
-    # Get the product or 404
     product = get_object_or_404(Product, id=product_id)
+    return render(request, "greenpharma/product_detail.html", {"product": product})
 
-    return render(request, "greenpharma/product_detail.html", {
-        "product": product
-    })
 
 # -------------------------------
 # Add to Cart
@@ -223,6 +224,25 @@ def view_cart(request):
 
 
 # -------------------------------
+# Update Cart Quantity (+ / -)
+# -------------------------------
+@login_required
+def update_cart_quantity(request, cart_id, action):
+    cart_item = get_object_or_404(Cart, id=cart_id, customer__user=request.user)
+
+    if action == "increase":
+        if cart_item.quantity < cart_item.product.stock:
+            cart_item.quantity += 1
+            cart_item.save()
+    elif action == "decrease":
+        if cart_item.quantity > 1:
+            cart_item.quantity -= 1
+            cart_item.save()
+
+    return redirect("view_cart")
+
+
+# -------------------------------
 # Remove from Cart
 # -------------------------------
 @login_required
@@ -234,7 +254,7 @@ def remove_from_cart(request, cart_id):
 
 
 # -------------------------------
-# Checkout
+# Checkout (Dummy Payment Flow)
 # -------------------------------
 @login_required
 def checkout(request):
@@ -245,20 +265,37 @@ def checkout(request):
         messages.error(request, "Your cart is empty.")
         return redirect("view_cart")
 
-    order = Order.objects.create(customer=customer)
+    total = sum(item.total_price() for item in cart_items)
 
-    for item in cart_items:
-        OrderItem.objects.create(
-            order=order,
-            product=item.product,
-            quantity=item.quantity,
-            price_at_purchase=item.product.discounted_price(),
-        )
+    if request.method == "POST":
+        # ✅ Create order
+        order = Order.objects.create(customer=customer, status="Pending")
 
-    cart_items.delete()  # Clear cart after checkout
+        for item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                product=item.product,
+                quantity=item.quantity,
+                price_at_purchase=item.product.discounted_price(),
+            )
+            # Reduce stock
+            item.product.stock -= item.quantity
+            item.product.save()
 
-    messages.success(request, f"🎉 Order #{order.id} placed successfully!")
-    return redirect("customer_dashboard")
+        cart_items.delete()
+
+        return redirect("payment")
+
+    return render(request, "greenpharma/checkout.html", {
+        "customer": customer,   # ✅ Added this
+        "cart_items": cart_items,
+        "total": total,
+    })
+
+@login_required
+def payment(request):
+    return render(request, "greenpharma/payment.html")
+
 
 # -------------------------------
 # Customer Profile
