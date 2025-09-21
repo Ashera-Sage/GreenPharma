@@ -175,3 +175,18 @@ class OrderItem(models.Model):
 
     def total_price(self):
         return self.price_at_purchase * self.quantity
+
+from django.db import models
+
+class Review(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="reviews")
+    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
+    rating = models.PositiveSmallIntegerField(default=5)  # 1 to 5 stars
+    comment = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        unique_together = ('product', 'customer')
+
+    def __str__(self):
+        return f"Review {self.rating} by {self.customer.user.username} for {self.product.name}"

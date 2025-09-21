@@ -10,10 +10,11 @@ from .models import (
     Cart,
     Order,
     OrderItem,
+    Review
 )
 
 # -------------------------------
-# Custom Registration Admin
+# Registration Admin
 # -------------------------------
 @admin.register(Registration)
 class RegistrationAdmin(UserAdmin):
@@ -34,7 +35,6 @@ class RegistrationAdmin(UserAdmin):
         }),
     )
 
-
 # -------------------------------
 # Customer Profile Admin
 # -------------------------------
@@ -42,7 +42,6 @@ class RegistrationAdmin(UserAdmin):
 class CustomerProfileAdmin(admin.ModelAdmin):
     list_display = ("user", "phone", "address")
     search_fields = ("user__username", "phone")
-
 
 # -------------------------------
 # Seller Profile Admin
@@ -77,7 +76,6 @@ class SellerProfileAdmin(admin.ModelAdmin):
         self.message_user(request, "❌ Selected sellers have been rejected.")
     reject_license.short_description = "Reject selected licenses"
 
-
 # -------------------------------
 # Category Admin
 # -------------------------------
@@ -85,7 +83,6 @@ class SellerProfileAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
-
 
 # -------------------------------
 # Product Admin
@@ -106,7 +103,6 @@ class ProductAdmin(admin.ModelAdmin):
         return f"₹{obj.discounted_price():.2f}"
     discounted_price_display.short_description = "Discounted Price"
 
-
 # -------------------------------
 # Cart Admin
 # -------------------------------
@@ -120,7 +116,6 @@ class CartAdmin(admin.ModelAdmin):
         return f"₹{obj.total_price():.2f}"
     total_price_display.short_description = "Total Price"
 
-
 # -------------------------------
 # OrderItem Inline
 # -------------------------------
@@ -133,7 +128,6 @@ class OrderItemInline(admin.TabularInline):
         return f"₹{obj.total_price():.2f}"
     total_price_display.short_description = "Total"
 
-
 # -------------------------------
 # Order Admin
 # -------------------------------
@@ -143,7 +137,20 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ("status", "created_at")
     search_fields = ("customer__user__username",)
     inlines = [OrderItemInline]
+    list_editable = ("status",)
+
 
     def total_amount_display(self, obj):
         return f"₹{obj.total_amount():.2f}"
     total_amount_display.short_description = "Total Amount"
+
+# -------------------------------
+# Review Admin
+# -------------------------------
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('product', 'customer', 'rating', 'created_at')
+    list_filter = ('rating', 'created_at')
+    search_fields = ('product__name', 'customer__user__username', 'comment')
+    readonly_fields = ('created_at',)
+    ordering = ('-created_at',)

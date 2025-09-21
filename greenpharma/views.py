@@ -1,15 +1,16 @@
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db import transaction
+from django.utils import timezone
 from django.core.paginator import Paginator
-from .forms import RegisterForm, LoginForm, ProductForm, CustomerProfileForm, SellerProfileForm
+from django.db.models import Avg
+from .forms import RegisterForm, LoginForm, ProductForm, CustomerProfileForm, SellerProfileForm, ReviewForm
 from .models import (
     Registration, CustomerProfile, SellerProfile,
-    Product, Category, Cart, Order, OrderItem
+    Product, Category, Cart, Order, OrderItem, Review
 )
-
 # -------------------------------
 # Home
 # -------------------------------
@@ -254,48 +255,91 @@ def remove_from_cart(request, cart_id):
 
 
 # -------------------------------
-# Checkout (Dummy Payment Flow)
+# Checkout 
 # -------------------------------
 @login_required
 def checkout(request):
-    customer = get_object_or_404(CustomerProfile, user=request.user)
+    customer = CustomerProfile.objects.get(user=request.user)
     cart_items = Cart.objects.filter(customer=customer)
 
     if not cart_items:
-        messages.error(request, "Your cart is empty.")
         return redirect("view_cart")
 
-    total = sum(item.total_price() for item in cart_items)
+    if request.method == "POST":  # user clicks "Order Now"
+        with transaction.atomic():
+            # Create a new order instance
+            order = Order.objects.create(customer=customer, created_at=timezone.now(), status="Pending")
 
-    if request.method == "POST":
-        # ✅ Create order
-        order = Order.objects.create(customer=customer, status="Pending")
+            # Create order items from cart
+            for item in cart_items:
+                OrderItem.objects.create(
+                    order=order,
+                    product=item.product,
+                    quantity=item.quantity,
+                    price_at_purchase=item.product.discounted_price()
+                )
 
-        for item in cart_items:
-            OrderItem.objects.create(
-                order=order,
-                product=item.product,
-                quantity=item.quantity,
-                price_at_purchase=item.product.discounted_price(),
-            )
-            # Reduce stock
-            item.product.stock -= item.quantity
-            item.product.save()
+            # Clear user's cart
+            cart_items.delete()
 
-        cart_items.delete()
+        messages.success(request, "Your order was placed successfully!")
+        return redirect('payment_success')
 
-        return redirect("payment")
+    total = sum(item.product.discounted_price() * item.quantity for item in cart_items)
 
-    return render(request, "greenpharma/checkout.html", {
-        "customer": customer,   # ✅ Added this
-        "cart_items": cart_items,
-        "total": total,
+    return render(request, 'greenpharma/checkout.html', {'cart_items': cart_items, 'total': total, 'customer': customer})
+
+
+@login_required
+def payment_success(request):
+    return render(request, 'greenpharma/payment_success.html')
+
+@login_required
+def order_history(request):
+    customer = CustomerProfile.objects.get(user=request.user)
+    orders = Order.objects.filter(customer=customer).order_by('-created_at')
+    return render(request, 'greenpharma/order_history.html', {'orders': orders})
+
+#-------------------------
+#Product details
+#-------------------------
+@login_required
+def product_detail(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    reviews = product.reviews.select_related('customer__user').all().order_by('-created_at')
+    avg_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
+
+    return render(request, 'greenpharma/product_detail.html', {
+        'product': product,
+        'reviews': reviews,
+        'avg_rating': avg_rating,
     })
 
 @login_required
-def payment(request):
-    return render(request, "greenpharma/payment.html")
+def write_review(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    customer = CustomerProfile.objects.get(user=request.user)
 
+    try:
+        review = Review.objects.get(product=product, customer=customer)
+    except Review.DoesNotExist:
+        review = None
+
+    if request.method == "POST":
+        form = ReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            new_review = form.save(commit=False)
+            new_review.product = product
+            new_review.customer = customer
+            new_review.save()
+            return redirect('product_detail', product_id=product_id)
+    else:
+        form = ReviewForm(instance=review)
+
+    return render(request, 'greenpharma/write_review.html', {
+        'form': form,
+        'product': product,
+    })
 
 # -------------------------------
 # Customer Profile

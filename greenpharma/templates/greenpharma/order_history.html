@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>My Orders - Green Pharma</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .order-card {
+            border-radius: 12px;
+            box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .order-header {
+            background-color: #198754;
+            color: white;
+            font-weight: bold;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            padding: 12px 20px;
+        }
+        .order-body {
+            padding: 20px;
+        }
+        .order-detail {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        .status-badge {
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 20px;
+            color: white;
+        }
+        .status-Pending {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        .status-Shipped {
+            background-color: #0d6efd;
+        }
+        .status-Delivered {
+            background-color: #198754;
+        }
+        .back-link {
+            margin: 20px 0;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5 mb-5">
+        <a href="{% url 'customer_dashboard' %}" class="btn btn-outline-success back-link">← Back to Dashboard</a>
+        <h2 class="mb-4 text-center text-success">My Orders</h2>
+
+        {% if orders %}
+            {% for order in orders %}
+                <div class="order-card">
+                    <div class="order-header">
+                        Placed On: {{ order.created_at|date:"M d, Y" }}
+                    </div>
+                    <div class="order-body">
+                        <div class="order-detail">
+                            Status: 
+                            <span class="status-badge status-{{ order.status }}">
+                                {{ order.status }}
+                            </span>
+                        </div>
+                        <div class="order-detail">
+                            Total Amount: ₹{{ order.total_amount|floatformat:2 }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center fs-5">You have no orders yet.</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>
