@@ -3,7 +3,6 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils import timezone
 from decimal import Decimal
 
-
 # -------------------------------
 # Custom Manager for Registration
 # -------------------------------

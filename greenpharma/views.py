@@ -6,6 +6,8 @@ from django.db import transaction
 from django.utils import timezone
 from django.core.paginator import Paginator
 from django.db.models import Avg
+from django.db.models import Sum, Value
+from django.db.models.functions import Coalesce
 from .forms import RegisterForm, LoginForm, ProductForm, CustomerProfileForm, SellerProfileForm, ReviewForm
 from .models import (
     Registration, CustomerProfile, SellerProfile,
@@ -15,8 +17,13 @@ from .models import (
 # Home
 # -------------------------------
 def home(request):
-    return render(request, 'greenpharma/home.html')
+    best_sellers = Product.objects.annotate(
+    total_sold=Coalesce(Sum('orderitem__quantity'), Value(0))
+).filter(total_sold__gt=0).order_by('-total_sold')[:3]
 
+    return render(request, 'greenpharma/home.html', {
+        'best_sellers': best_sellers,
+    })
 
 # -------------------------------
 # Register
