@@ -5,7 +5,7 @@ body.bg-light {
 
 /* Navbar styling */
 .navbar.bg-success {
-    background: linear-gradient(90deg, #06273e, #043d04, #51c1dd, #37ee12);
+    background: linear-gradient(90deg, #06273e, #043d04, #e8f4f7, #37ee12);
 }
 .navbar-brand,
 .navbar-nav .nav-link {
