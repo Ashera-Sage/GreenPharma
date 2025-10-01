@@ -150,10 +150,12 @@ def delete_product(request, product_id):
     profile = SellerProfile.objects.get(user=request.user)
     product = get_object_or_404(Product, id=product_id, seller=profile)
     if request.method == "POST":
+        print(f"Deleting Product: {product.name} (ID: {product.id})")  # debug
         product.delete()
         messages.success(request, "❌ Product deleted successfully!")
         return redirect("seller_dashboard")
     return render(request, "greenpharma/delete_product.html", {"product": product})
+
 
 
 # -------------------------------

@@ -1,0 +1,113 @@
+body.bg-light {
+    background-color: #f6faf4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Consistent navbar gradient */
+.navbar.bg-success {
+    background: linear-gradient(90deg, #387851, #040a06, #f9f4e7, #1d5f18);
+}
+.navbar-brand,
+.navbar-nav .nav-link {
+    color: #fff !important;
+    font-weight: 700;
+    text-shadow: 0 0 6px rgba(35, 70, 33, 0.14);
+}
+
+/* Cart heading */
+h3.text-success {
+    font-weight: 700;
+    font-size: 1.7rem;
+    margin-bottom: 2rem;
+    letter-spacing: 1px;
+}
+
+/* Cart Table */
+.table {
+    border-radius: 0.7rem;
+    overflow: hidden;
+    box-shadow: 0 6px 22px rgba(102,187,106,0.07);
+    margin-bottom: 2.2rem;
+}
+.table-success th {
+    background: linear-gradient(90deg, #66bb6a 60%, #f9f4e7 100%);
+    color: #195731;
+    font-weight: 700;
+    font-size: 1.07rem;
+    letter-spacing: .03em;
+    border-bottom: 2px solid #d4af37;
+}
+.table-bordered > :not(caption) > * > * {
+    border: 1.8px solid #66bb6a;
+}
+
+td {
+    vertical-align: middle !important;
+    font-size: 1.05rem;
+    color: #333;
+    background: #fff;
+    padding-top: .7rem !important;
+    padding-bottom: .7rem !important;
+}
+
+table .btn-outline-secondary {
+    border-radius: 0.45rem;
+    font-weight: 600;
+    border: 2px solid #adb5bd;
+    color: #257a3e;
+    background: #f8fefa;
+    transition: background 0.13s, color 0.13s;
+}
+table .btn-outline-secondary:hover {
+    background: #66bb6a;
+    color: #fff;
+}
+
+.btn-danger {
+    border-radius: 0.45rem;
+    font-weight: 600;
+    padding: 0.34rem 0.78rem;
+    background: linear-gradient(90deg, #de4545, #ffc9c9);
+    border: none;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, .08);
+}
+.btn-danger:hover {
+    background: linear-gradient(90deg, #b70101, #ffc9c9);
+    color: #fff;
+}
+
+/* Cart summary and checkout */
+.text-end h5 {
+    font-size: 1.18rem;
+    font-weight: 700;
+    margin-top: .8rem;
+    color: #267d60;
+}
+.btn-success {
+    background: linear-gradient(90deg, #338744, #67cb81);
+    border: none;
+    font-weight: 700;
+    border-radius: 0.6rem;
+    padding: 0.6rem 2.2rem;
+    box-shadow: 0 4px 11px rgba(102,187,106,0.11);
+    margin-top: .7rem;
+    transition: background .16s, box-shadow .16s;
+}
+.btn-success:hover {
+    background: linear-gradient(90deg, #195731, #67cb81);
+}
+
+.text-center {
+    font-size: 1.13rem;
+    color: #267d60;
+    margin-top: 3rem;
+}
+
+.mx-2 {
+    font-size: 1.09rem;
+    font-weight: 650;
+}
+
+.d-flex.align-items-center.justify-content-center {
+    gap: 0.15rem;
+}
