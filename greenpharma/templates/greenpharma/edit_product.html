@@ -5,8 +5,71 @@
     <meta charset="UTF-8">
     <title>Edit Product – Green Pharma</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/edit_product.css' %}">
+  
+<style>body.bg-light {
+    background-color: #f8f6f0; /* cream background */
+    font-family: 'Roboto', sans-serif;
+    color: #2c3e29; /* dark greenish text */
+    margin: 0;
+    padding: 0;
+}
 
+.container {
+    max-width: 600px;
+}
+
+.card {
+    border-radius: 16px;
+    background: white;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    padding: 2rem 2.5rem;
+    transition: box-shadow 0.3s ease;
+}
+.card:hover {
+    box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+}
+
+h3.text-success {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #1a4d2e;
+    margin-bottom: 1.5rem;
+    text-shadow: 1px 1px 2px rgb(198 167 105 / 0.6);
+}
+
+form {
+    font-size: 1.05rem;
+}
+
+form button.btn-success {
+    background-color: #c6a769;
+    border: none;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 50px;
+    box-shadow: 0 0 12px rgba(198, 167, 105, 0.6);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+form button.btn-success:hover {
+    background-color: #a68c3f;
+    box-shadow: 0 0 18px #a68c3f;
+}
+
+form a.btn-secondary {
+    border-radius: 50px;
+    padding: 10px 22px;
+    margin-left: 10px;
+    font-weight: 600;
+    background-color: #4f8a61;
+    border: none;
+    color: white;
+}
+
+form a.btn-secondary:hover {
+    background-color: #396f47;
+    text-decoration: none;
+}</style>
 </head>
 <body class="bg-light">
 

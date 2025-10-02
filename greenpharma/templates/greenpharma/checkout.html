@@ -4,7 +4,86 @@
 <head>
     <title>Checkout – Green Pharma</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+    <style>body.bg-light {
+    background-color: #f6faf4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navbar gradient consistent with brand */
+.navbar.bg-success {
+    background: linear-gradient(90deg, #387851, #65c780, #f9f4e7, #d4af37);
+}
+.navbar-brand,
+.navbar-nav .nav-link {
+    color: #fff !important;
+    font-weight: 700;
+    text-shadow: 0 0 6px rgba(35, 70, 33, 0.14);
+}
+
+/* Page heading */
+h3.text-success {
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+}
+
+/* Cards with smooth shadows and rounded corners */
+.card {
+    border-radius: 1rem;
+    box-shadow: 0 6px 22px rgba(102, 187, 106, 0.15);
+}
+
+/* Card headers with green background and white text */
+.card-header.bg-success {
+    font-weight: 700;
+    font-size: 1.2rem;
+    border-radius: 1rem 1rem 0 0;
+    background: linear-gradient(90deg, #288337, #66bb6a);
+    box-shadow: inset 0 -3px 8px rgba(47, 96, 27, 0.45);
+}
+
+/* List group item styling */
+.list-group-item {
+    font-size: 1.1rem;
+    color: #2e7d32;
+    border: none;
+    padding: 15px 20px;
+    background: #fafff7;
+    border-bottom: 1px solid #cdeec2;
+}
+
+/* Total amount styling */
+.text-end h5 {
+    font-weight: 700;
+    color: #1d4d27;
+}
+
+/* Order Now button styling */
+.btn-success {
+    background: linear-gradient(90deg, #2e7d32, #66bb6a);
+    border: none;
+    font-weight: 700;
+    border-radius: 0.7rem;
+    padding: 0.75rem 2.5rem;
+    box-shadow: 0 5px 18px rgba(46, 125, 50, 0.35);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    font-size: 1.1rem;
+    width: 100%;
+}
+
+.btn-success:hover {
+    background: linear-gradient(90deg, #145023, #4caf50);
+    box-shadow: 0 7px 26px rgba(27, 94, 32, 0.55);
+}
+
+/* Delivery details text */
+.card-body p {
+    font-size: 1.1rem;
+    line-height: 1.4;
+    margin-bottom: 0.8rem;
+    color: #276a31;
+}
+</style>
 </head>
 <body class="bg-light">
 

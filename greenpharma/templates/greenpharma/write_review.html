@@ -5,7 +5,86 @@
     <meta charset="UTF-8" />
     <title>Write Review – {{ product.name }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="{% static 'css/write_review.css' %}">
+   
+    <style>body.bg-light {
+    background-color: #f6faf4;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navbar gradient consistent with the brand */
+.navbar.bg-success {
+    background: linear-gradient(90deg, #29d757, #bec898, #398d1a, #14571a);
+}
+.navbar-brand,
+.navbar-nav .nav-link {
+    color: #fff !important;
+    font-weight: 700;
+    text-shadow: 0 0 6px rgba(35, 70, 33, 0.14);
+}
+
+/* Main container */
+.container.mt-5 {
+    max-width: 520px;
+    background: #fff;
+    border-radius: 1.1rem;
+    box-shadow: 0 8px 32px rgba(102, 187, 106, 0.13);
+    padding: 2.4rem 2rem 2.3rem 2rem;
+}
+
+/* Heading */
+h2 {
+    color: #257a3e;
+    font-weight: 700;
+    margin-bottom: 2.2rem;
+}
+
+/* Form labels and fields */
+label {
+    color: #2e7d32;
+    font-weight: 700;
+    margin-bottom: .5em;
+    font-size: 1rem;
+}
+
+.mb-3 {
+    margin-bottom: 1.3rem !important;
+}
+input, select, textarea {
+    border: 2px solid #66bb6a;
+    border-radius: 0.45rem;
+    padding: 0.52rem 1.1rem;
+    background: #f8fefa;
+    font-size: 1.05rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 1px 5px rgba(102, 187, 106, 0.1) inset;
+}
+input:focus, select:focus, textarea:focus {
+    border-color: #257a3e;
+    box-shadow: 0 0 9px rgba(46, 125, 50, 0.18);
+    outline: none;
+}
+
+/* Buttons */
+.btn-primary {
+    background: linear-gradient(90deg, #34a853, #7dd47d);
+    border: none;
+    font-weight: 700;
+    border-radius: 0.5rem;
+    padding: 0.54rem 2.2rem;
+    box-shadow: 0 2px 10px rgba(102, 187, 106, 0.13);
+    transition: background 0.22s, box-shadow 0.22s;
+}
+.btn-primary:hover {
+    background: linear-gradient(90deg, #257a3e, #5bc073);
+    box-shadow: 0 4px 18px rgba(46, 125, 50, 0.22);
+}
+.btn-secondary {
+    font-weight: 600;
+    border-radius: 0.5rem;
+    padding: 0.50rem 1.4rem;
+}
+</style>
+    
 </head>
 <body class="bg-light">
 
